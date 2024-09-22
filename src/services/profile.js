@@ -1,0 +1,83 @@
+import axios from 'axios';
+
+const API_URL = 'http://tu-api-url.com/api';
+
+export const getProfiles = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/profiles`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
+    return [];
+  }
+};
+
+export const getSkills = async (profileId) => {
+  try {
+    const response = await axios.get(`${API_URL}/skills`, { params: { profileId } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching skills:', error);
+    return [];
+  }
+};
+
+export const getCertifications = async (profileId) => {
+  try {
+    const response = await axios.get(`${API_URL}/certifications`, { params: { profileId } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching certifications:', error);
+    return [];
+  }
+};
+
+export const getSoftwares = async (profileId) => {
+  try {
+    const response = await axios.get(`${API_URL}/softwares`, { params: { profileId } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching softwares:', error);
+    return [];
+  }
+};
+
+export const getMethodologies = async (profileId) => {
+  try {
+    const response = await axios.get(`${API_URL}/methodologies`, { params: { profileId } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching methodologies:', error);
+    return [];
+  }
+};
+
+export const getPositions = async (profileId) => {
+  try {
+    const response = await axios.get(`${API_URL}/positions`, { params: { profileId } });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching positions:', error);
+    return [];
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/categories`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+};
+
+export const saveProfile = async (profileData) => {
+  try {
+    const response = await axios.post(`${API_URL}/profile`, profileData);
+    return response.data;
+  } catch (error) {
+    console.error('Error saving profile:', error);
+    throw error;
+  }
+};
