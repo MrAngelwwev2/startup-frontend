@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://tu-api-url.com/api';
+const API_URL = 'http://http://127.0.0.1:8000/';
 
 export const getProfiles = async () => {
   try {
@@ -71,6 +71,16 @@ export const getCategories = async () => {
     return [];
   }
 };
+
+export const getCountries = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/countries`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching countries:', error);
+    return [];
+  }
+}
 
 export const saveProfile = async (profileData) => {
   try {
