@@ -10,6 +10,9 @@ import {
   Checkbox, 
   FormControlLabel, 
   Container, 
+  FormControl,
+  InputLabel,
+  FormHelperText,
   Grid, 
   makeStyles 
 } from '@material-ui/core';
@@ -86,7 +89,7 @@ const SignUp = () => {
           setSubmitting(false);
         }}
       >
-        {({ errors, touched, values, handleChange }) => (
+        {({ errors, touched, values, handleChange, setFieldValue }) => (
           <Form className={classes.form}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -152,41 +155,49 @@ const SignUp = () => {
                   as={TextField}
                   variant="outlined"
                   fullWidth
-                  label="Número de Teléfono (Ej. 51987654321)"
+                  label="Número de Teléfono (Ej. +51987654321)"
                   error={touched.telefono && errors.telefono}
                   helperText={touched.telefono && errors.telefono}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Field
-                  name="genero"
-                  as={Select}
-                  variant="outlined"
-                  fullWidth
-                  label="Género"
-                  className={classes.formControl}
-                >
-                  <MenuItem value="masculino">Masculino</MenuItem>
-                  <MenuItem value="femenino">Femenino</MenuItem>
-                  <MenuItem value="otro">Otro</MenuItem>
-                </Field>
+                <FormControl variant="outlined" fullWidth error={touched.genero && errors.genero}>
+                  <InputLabel id="genero-label">Género</InputLabel>
+                  <Field
+                    name="genero"
+                    as={Select}
+                    labelId="genero-label"
+                    label="Género"
+                    onChange={(e) => {
+                      setFieldValue('genero', e.target.value);
+                    }}
+                  >
+                    <MenuItem value="Masculino">Masculino</MenuItem>
+                    <MenuItem value="Femenino">Femenino</MenuItem>
+                  </Field>
+                  {touched.genero && errors.genero && <FormHelperText>{errors.genero}</FormHelperText>}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Field
-                  name="pais"
-                  as={Select}
-                  variant="outlined"
-                  fullWidth
-                  label="País"
-                  className={classes.formControl}
-                  error={touched.pais && errors.pais}
-                >
-                  {countries.map((country) => (
-                    <MenuItem key={country.id_countries} value={country.id_countries}>
-                      {country.country}
-                    </MenuItem>
-                  ))}
-                </Field>
+                <FormControl variant="outlined" fullWidth error={touched.pais && errors.pais}>
+                  <InputLabel id="pais-label">País</InputLabel>
+                  <Field
+                    name="pais"
+                    as={Select}
+                    labelId="pais-label"
+                    label="País"
+                    onChange={(e) => {
+                      setFieldValue('pais', e.target.value);
+                    }}
+                  >
+                    {countries.map((country) => (
+                      <MenuItem key={country.id_countries} value={country.id_countries}>
+                        {country.country}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                  {touched.pais && errors.pais && <FormHelperText>{errors.pais}</FormHelperText>}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Field
