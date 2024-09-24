@@ -82,6 +82,16 @@ export const getCountries = async () => {
   }
 }
 
+export const getCitiesByCountry = async(id_country) => {
+  try {
+    const response = await axios.get(`${API_URL}/cities/country/${id_country}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching cities for country ${id_country}:`, error);
+    return [];
+  }
+}
+
 export const saveProfile = async (profileData) => {
   try {
     const response = await axios.post(`${API_URL}/profile`, profileData);

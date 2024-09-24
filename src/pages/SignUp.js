@@ -14,10 +14,14 @@ import {
   InputLabel,
   FormHelperText,
   Grid, 
-  makeStyles 
+  makeStyles,
+  InputAdornment,
+  IconButton
 } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import {
   getCountries,
+  getCitiesByCountry,
 } from '../services/profile';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +55,9 @@ const SignUpSchema = Yup.object().shape({
 const SignUp = () => {
   const classes = useStyles();
   const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -63,6 +70,23 @@ const SignUp = () => {
     };
     fetchCountries();
   }, []);
+
+  const fetchCitiesByCountry = async (id_country) => {
+    try {
+      const cityData = await getCitiesByCountry(id_country);
+      setCities(cityData);
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <Container component="main" maxWidth="md">
@@ -181,58 +205,97 @@ const SignUp = () => {
               <Grid item xs={12} sm={6}>
                 <FormControl variant="outlined" fullWidth error={touched.pais && errors.pais}>
                   <InputLabel id="pais-label">País</InputLabel>
-                  <Field
-                    name="pais"
-                    as={Select}
+                  <Select
                     labelId="pais-label"
                     label="País"
+                    value={values.pais}
                     onChange={(e) => {
                       setFieldValue('pais', e.target.value);
+                      fetchCitiesByCountry(e.target.value);
                     }}
                   >
+                    <MenuItem value="">
+                      <em>Seleccione un país</em>
+                    </MenuItem>
                     {countries.map((country) => (
                       <MenuItem key={country.id_countries} value={country.id_countries}>
                         {country.country}
                       </MenuItem>
                     ))}
-                  </Field>
+                  </Select>
                   {touched.pais && errors.pais && <FormHelperText>{errors.pais}</FormHelperText>}
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Field
-                  name="ciudad"
-                  as={TextField}
-                  variant="outlined"
-                  fullWidth
-                  label="Ciudad"
-                  error={touched.ciudad && errors.ciudad}
-                  helperText={touched.ciudad && errors.ciudad}
-                />
+              <FormControl variant="outlined" fullWidth error={touched.ciudad && errors.ciudad}>
+                <InputLabel id="ciudad-label">Ciudad</InputLabel>
+                <Select
+                    labelId="ciudad-label"
+                    label="Ciudad"
+                    value={values.ciudad}
+                    onChange={(e) => setFieldValue('ciudad', e.target.value)}
+                  >
+                    <MenuItem value="">
+                      <em>Seleccione una ciudad</em>
+                    </MenuItem>
+                    {cities.map((city) => (
+                      <MenuItem key={city.id_cities} value={city.id_cities}>
+                        {city.city}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {touched.ciudad && errors.ciudad && <FormHelperText>{errors.ciudad}</FormHelperText>}
+              </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Field
-                  name="password"
-                  as={TextField}
-                  variant="outlined"
-                  fullWidth
-                  type="password"
-                  label="Contraseña"
-                  error={touched.password && errors.password}
-                  helperText={touched.password && errors.password}
-                />
+                    name="password"
+                    as={TextField}
+                    variant="outlined"
+                    fullWidth
+                    type={showPassword ? 'text' : 'password'}
+                    label="Contraseña"
+                    error={touched.password && errors.password}
+                    helperText={touched.password && errors.password}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={togglePasswordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Field
-                  name="confirmPassword"
-                  as={TextField}
-                  variant="outlined"
-                  fullWidth
-                  type="password"
-                  label="Confirmar Contraseña"
-                  error={touched.confirmPassword && errors.confirmPassword}
-                  helperText={touched.confirmPassword && errors.confirmPassword}
-                />
+                    name="confirmPassword"
+                    as={TextField}
+                    variant="outlined"
+                    fullWidth
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    label="Confirmar Contraseña"
+                    error={touched.confirmPassword && errors.confirmPassword}
+                    helperText={touched.confirmPassword && errors.confirmPassword}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle confirm password visibility"
+                            onClick={toggleConfirmPasswordVisibility}
+                            edge="end"
+                          >
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <Field
